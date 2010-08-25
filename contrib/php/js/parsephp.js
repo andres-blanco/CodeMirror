@@ -55,6 +55,11 @@ var PHPParser = Editor.Parser = (function() {
   var atomicTypes = {
     "atom": true, "number": true, "variable": true, "string": true
   };
+  
+  // Custom indentor. If false then the default is used else this is the function
+  // to use.
+  var customIndentor = false;
+  
   // Constructor for the lexical context objects.
   function PHPLexical(indented, column, type, align, prev, info) {
     // indentation at start of this line
@@ -138,7 +143,11 @@ var PHPParser = Editor.Parser = (function() {
           lexical.align = false;
         // Newline tokens get an indentation function associated with
         // them.
-        token.indentation = indentPHP(lexical);
+        if (customIndentor === false) {
+          token.indentation = indentPHP(lexical);
+        } else {
+          token.indentation = customIndentor(lexical);
+        }
       }
       // No more processing for meaningless tokens.
       if (token.type == "whitespace" || token.type == "comment"
@@ -413,6 +422,14 @@ var PHPParser = Editor.Parser = (function() {
     return parser;
   }
 
-  return {make: parsePHP, electricChars: "{}:"};
+  return {
+	  make: parsePHP,
+	  electricChars: "{}:",
+	  configure: function(config) {
+		  if (config.customIndentor != null) {
+        customIndentor = config.customIndentor;
+      }
+	  }
+  };
 
 })();

@@ -294,11 +294,40 @@ EOSTRING
     </div>
 
     <script type="text/javascript">
+      /**
+       * This indentor is basically the same as the default but it doesn't
+       * put a whitespace in the lines after the php opening tag
+       * Example with custom indentor:
+       * <?php
+       * echo 1; // this is correctly indented
+       *  echo 2; // this is not
+       * ?>
+       */
+      var customIndentor = function(lexical) {
+            return function(firstChars) {
+              var firstChar = firstChars && firstChars.charAt(0), type = lexical.type;
+              var closing = firstChar == type;
+              if (type == "form" && firstChar == "{")
+                return lexical.indented;
+              else if (type == "stat" || type == "form")
+                return lexical.indented + indentUnit;
+              else if (lexical.info == "switch" && !closing)
+                return lexical.indented + (/^(?:case|default)\b/.test(firstChars) ? indentUnit : 2 * indentUnit);
+              else if (lexical.align)
+                return lexical.column - (closing ? 1 : 0);
+              else if (lexical.prev == undefined)
+                return lexical.indented;
+              else
+                return lexical.indented + (closing ? 0 : indentUnit);
+            };
+      };
+      
       var editor = CodeMirror.fromTextArea('code', {
         height: "350px",
         parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js",
                      "../contrib/php/js/tokenizephp.js", "../contrib/php/js/parsephp.js",
                      "../contrib/php/js/parsephphtmlmixed.js"],
+        parserConfig: { customPHPIndentor: customIndentor },
         stylesheet: ["../../css/xmlcolors.css", "../../css/jscolors.css", "../../css/csscolors.css", "css/phpcolors.css"],
         path: "../../js/",
         continuousScanning: 500

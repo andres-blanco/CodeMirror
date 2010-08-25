@@ -110,6 +110,8 @@ var PHPHTMLMixedParser = Editor.Parser = (function() {
     electricChars: "{}/:",
     configure: function(conf) {
       if (conf.opening != null) processingInstructions = conf.opening;
+      if (conf.customPHPIndentor != null) 
+        PHPParser.configure({customIndentor: conf.customPHPIndentor});
     }
   };
 
