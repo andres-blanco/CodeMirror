@@ -426,7 +426,7 @@ var PHPParser = Editor.Parser = (function() {
 	  make: parsePHP,
 	  electricChars: "{}:",
 	  configure: function(config) {
-		  if (config.customIndentor != null) {
+      if (config.customIndentor != null) {
         customIndentor = config.customIndentor;
       }
 	  }
