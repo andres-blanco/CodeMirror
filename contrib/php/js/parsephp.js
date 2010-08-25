@@ -423,13 +423,13 @@ var PHPParser = Editor.Parser = (function() {
   }
 
   return {
-	  make: parsePHP,
-	  electricChars: "{}:",
-	  configure: function(config) {
+    make: parsePHP,
+    electricChars: "{}:",
+    configure: function(config) {
       if (config.customIndentor != null) {
         customIndentor = config.customIndentor;
       }
-	  }
+    }
   };
 
 })();
